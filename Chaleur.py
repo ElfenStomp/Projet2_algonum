@@ -1,3 +1,14 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+def display(M):
+    m = len(M[0])
+    for i in range(0, m, 1):
+        print(M[i])
+        print("")
+    print("_____________________________")
+
 ##
 def matrice_chaleur(n):
     m = n**2
@@ -10,7 +21,8 @@ def matrice_chaleur(n):
         if (i >= n):
             A[i-n][i] = 1   #diagonale supérieur
             A[i][i-n] = 1   #diagonale inférieur
-    display(A)
+    return A
 
 ##BEGIN
-matrice_chaleur(2)
+A = matrice_chaleur(2)
+display(A)

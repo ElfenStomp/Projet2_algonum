@@ -8,6 +8,7 @@ def display(M):
         print(M[i])
         print("")
     print("_____________________________")
+    
 ##Transposé
 def transposer_triangulaire_inf(L):
     m = len(L[0])
