@@ -52,20 +52,6 @@ def cholesky_imcomplet(A):
 ##
 def matrice_creation():
     None
-    
-##
-def matrice_chaleur(n):
-    m = n**2
-    A = np.zeros([m, m])
-    for i in range(0, m, 1):
-        A[i][i] = -4        #diagonale
-        if i%n != 0:   
-            A[i][i-1] = 1   #extra diagonale inferieur
-            A[i-1][i] = 1   #extra diagonale supérieur
-        if (i >= n):
-            A[i-n][i] = 1   #diagonale supérieur
-            A[i][i-n] = 1   #diagonale inférieur
-    display(A)
 
 ##
 def preconditionneur(A):
@@ -75,8 +61,8 @@ def preconditionneur(A):
     display(L_t) 
     print(np.linalg.cond(A))
     print(np.linalg.cond(np.dot(np.linalg.inv(np.dot(L, L_t)), A)))
-
-matrice_chaleur(2)
+    
+##BEGIN
 A=np.array([[1, 1, 1, 1], [1, 5, 5, 5], [1, 5, 14, 14], [1, 5, 14, 15]])
 preconditionneur(A)
 
