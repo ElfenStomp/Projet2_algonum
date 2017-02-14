@@ -48,6 +48,10 @@ def cholesky_imcomplet(A):
                     L[j][i] += L[i][k]*L[j][k]
                 L[j][i] = (A[i][j] - L[j][i]) / L[i][i]
     return L 
+
+##
+def matrice_creation():
+    None
     
 ##
 def matrice_chaleur(n):
