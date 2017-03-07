@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import random
 
 def display(M):
     m = len(M[0])
@@ -49,11 +50,28 @@ def cholesky_imcomplet(A):
                     L[j][i] += L[i][k]*L[j][k]
                 L[j][i] = (A[i][j] - L[j][i]) / L[i][i]
     return L 
-
+np.ch
 ##
-def matrice_creation():
-    None
-
+def matrice_creation(n, nb_extra_diag):
+    A = np.zeros([n, n])
+    coord = []
+    for i in range(0, n, 1):
+        for j in range(0, i, 1):
+            coord.append([i, j])
+    for i in range(0, nb_extra_diag, 1):
+        c = random.randint(0, len(coord)-1)
+        val = random.randint(0,50)
+        A[coord[c][0]][coord[c][1]] = val
+        A[coord[c][1]][coord[c][0]] = val
+        del coord[c]
+    for i in range(0, n, 1):
+        s = 0
+        for j in range(0, n, 1):
+            s = s + A[i][j]
+        A[i][i] = random.randint(s, 2*s)
+     
+    display(A)
+ch
 ##
 def preconditionneur(A):
     L = cholesky(A)
@@ -66,6 +84,9 @@ def preconditionneur(A):
 ##BEGIN
 A=np.array([[1, 1, 1, 1], [1, 5, 5, 5], [1, 5, 14, 14], [1, 5, 14, 15]])
 preconditionneur(A)
+n = 5
+nb_extra_diag = 2
+matrice_creation(n, nb_extra_diag) 
 
 ##Partie 1 
 """
@@ -77,4 +98,4 @@ preconditionneur(A)
    
    Au final la compléxité est de l'ordre de O(n**3)
 """
-## 
+## 0
