@@ -23,7 +23,7 @@ def montee_gauss(T, b):
 def descente_gauss(T, b):
     n = len(T[0])
     x = np.zeros(n)
-    for i in range(0, n - 1, 1):
+    for i in range(0, n, 1):
         y = b[i]
         for j in range(0, i, 1):
             y = y -(T[i, j] * x[j])
