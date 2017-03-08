@@ -68,7 +68,14 @@ def creation_b_nord(N):
     
 def creation_b_centre(N):
     b = np.zeros([N**2, 1])
-    b[((N**2)//2) - 1 + (N//2)] = 1    
+    center = ((N**2)//2) - 1 + (N//2)
+    if N == 1:
+        b[center] = 1
+        return b
+    b[center - N] = 1
+    b[center - N + 1] = 1 
+    b[center] = 1 
+    b[center + 1] = 1     
     return b 
 
 ##Resolution_Cholesky
@@ -92,7 +99,7 @@ def display_heat(x):
 N = 2
 A = matrice_chaleur(N)
 display(A)
-N = 20
+N = 50
 #b = creation_b_nord(N)
 b = creation_b_centre(N)
 x = resolution_cholesky(N, b)
