@@ -7,8 +7,8 @@ import time
 
 ##Affichage_de_la_matrice_M
 def display(M):
-    m = len(M[0])
-    for i in range(0, m, 1):
+    l = len(M)
+    for i in range(0, l, 1):
         print(M[i])
         print("")
     print("_____________________________")
