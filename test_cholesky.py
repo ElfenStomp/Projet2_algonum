@@ -1,7 +1,35 @@
 import numpy as np
+import time
+import matplotlib.pyplot as plt
+from matplotlib.legend_handler import HandlerLine2D
 
 import sdp_matrix as sdp
 import Cholesky as cho
+
+##Test_Cholesky_incomplet
+def test_cholesky_incomplet():
+    n = 100
+    nb_extra_diag = ((n**2) // 2) - n - 1 
+    t1 = np.arange(0, nb_extra_diag, 50)
+    t2=[]
+    t3=[]
+    l=len(t1)
+    for i in range(0, nb_extra_diag, 50):
+        A=sdp.matrice_SDP(n, i)
+        tmps=time.time()
+        cho.cholesky(A)
+        t2.append(time.time()-tmps)
+        tmps=time.time()
+        cho.cholesky_incomplet(A)
+        t3.append(time.time()-tmps)
+        
+    plt.figure(1)
+    plt.subplot(211)
+    line1, =plt.plot(t1, t2, color="blue", label="Choleski")
+    line2, =plt.plot(t1, t3, color="red", label="Cholesky incomplet")
+    plt.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
+    plt.xlabel("Nombre de termes extra-diagonaux")
+    plt.ylabel("Temps d'execution (en seconde)")
 
 ##PARTIE_1
 #1.Cholesky
@@ -31,7 +59,7 @@ print("Matrice SDP de taille 5 avec 3 termes extra-diagonaux non nuls :")
 cho.display(sdp.matrice_SDP(5, 3))
 
 #4.Cholesky incomplet
-cho.test_cholesky_incomplet()
+test_cholesky_incomplet()
 #TODO: calculer la complexité
 
 #5.

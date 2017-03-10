@@ -2,6 +2,8 @@ import random as r
 import numpy as np
 
 # Creation of a SDP matrix
+# n : size of the matrix
+# nb_extra_diag: number of extra-diagonal not equal to zero (random between 0,50).
 def matrice_SDP(n, nb_extra_diag):
     A = np.zeros([n, n])
     coord = []
@@ -21,6 +23,7 @@ def matrice_SDP(n, nb_extra_diag):
         A[i][i] = r.randint(s + 1, 2 * s +1)
     return A
 
+# Creation of a n-sized random vector, with value between 0 and 50. 
 def random_vector(n):
     B = np.zeros((n,1))
     for i in range(0,n,1):

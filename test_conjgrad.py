@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt # pour tracer la courbe de comparaisons entre la
 import sdp_matrix as sdp # pour générer des matrices symétriques définies positives à diagonale dominante
 
 import sdp_matrix as sdp
-import conjgrad as c
+import conjgrad as conj
 
 
 def tst_conjgrad():
@@ -19,7 +19,7 @@ def tst_conjgrad():
     p = 10**(-100)
     print("\n Précision à ",p," près \n")
         # Comparaison sommaire entre conjgrad et np.linalg.solve
-    X1 = c.conjgrad_precond(A, B, X, imax, p)
+    X1 = conj.conjgrad_precond(A, B, X, imax, p)
     X2 = spl.solve(A, B)
     print("\n Avec la méthode du gradient conjugué on a X = \n", X1)
     print("Avec la fonction solve de la biliothèque scipy.linalg on a X = \n", X2)
@@ -48,9 +48,9 @@ def tst_conjgrad():
         tab = []
         for i in t:
             if (c_index < curve_nbr/2 ):
-                X_diff = c.conjgrad(A, B, Xzero, imax, 10**(-i)) - X2
+                X_diff = conj.conjgrad(A, B, Xzero, imax, 10**(-i)) - X2
             else:
-                X_diff = c.conjgrad_precond(A, B, Xzero, imax, 10**(-i)) - X2
+                X_diff = conj.conjgrad_precond(A, B, Xzero, imax, 10**(-i)) - X2
             scalar_product = np.transpose(X_diff).dot(X_diff)[0][0]
             tab.append(scalar_product)
         plt.plot(t, tab, label="produit scalaire " + str(c_index + 1))
