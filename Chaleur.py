@@ -3,27 +3,8 @@ import matplotlib.pyplot as plt
 import math
 import scipy.linalg as spl# pour la fonction solve, qui resoud une équation de type AX = B
 
-##Affichage_de_la_matrice_M
-def display(M):
-    m = len(M[0])
-    for i in range(0, m, 1):
-        print(M[i])
-        print("")
-    print("_____________________________")
-
-##Cholesky
-def cholesky(A):
-    m = len(A[0])
-    L = np.zeros([m, m])
-    for i in range(0, m, 1):                            
-        for k in range(0, i, 1):
-            L[i][i] += L[i][k]**2
-        L[i][i] = math.sqrt(A[i][i] - L[i][i])
-        for j in range(i + 1, m, 1):                      
-            for k in range(0, i, 1):
-                L[j][i] += L[i][k] * L[j][k]
-            L[j][i] = (A[i][j] - L[j][i]) / L[i][i]
-    return L
+import Cholesky as cho
+import conjgrad as conj
 
 ##Pivot de Gauss
 def montee_gauss(T, b):
@@ -83,7 +64,7 @@ def creation_b_centre(N):
 def resolution_cholesky(N, b):
     h = 1 / (N + 1)
     A = matrice_chaleur(N)
-    L = cholesky(-A)
+    L = cho.cholesky(-A)
     y = descente_gauss(L, b)
     x = montee_gauss(np.transpose(L), y)
     x = (x * (h**2))   # *(-1) ?
@@ -98,58 +79,6 @@ def is_symdefpos(M):
             if (M[i][j] != M[j][i]):
                 return False
 
-            
-def conjgrad(A,B,X,imax,p):
-    if (is_symdefpos(A) == False):
-        # On vérifie que A soit bien symétrique définie positive.
-        print("\n A n'est pas symétrique définie positive")
-        return np.zeros((np.shape(A)[0],1))
-    R = B - A.dot(X)
-    P = R
-    rs_old = np.transpose(R).dot(R)
-    for i in range(1, imax + 1):
-        Ap = A.dot(P)
-        alpha = rs_old / np.transpose(P).dot(Ap)
-        X = X + (alpha * P)
-        R = R - (alpha * Ap)
-        rs_new = np.transpose(R).dot(R)
-        if (math.sqrt(rs_new) < p):
-            break
-        P = R + (rs_new/rs_old) * P
-        rs_old = rs_new
-    print("\n R = \n", R)
-    print("\n X = \n", X)
-    return X
-
-def conjgrad_precond(A,B,X,imax,p):
-    if (is_symdefpos(A) == False):
-        # On vérifie que A soit bien symétrique définie positive.
-        print("\n A n'est pas symétrique définie positive")
-        return np.zeros((np.shape(A)[0],1))
-    R = B - A.dot(X)
-    #M = matrix_inv_approx(A)
-    M = spl.inv(A)
-    Z = M.dot(R)
-    P = Z
-    rs_old = np.transpose(R).dot(Z)
-    rs_old_beta = np.transpose(Z).dot(R)
-    for i in range(1, imax + 1):
-        Ap = A.dot(P)
-        alpha = rs_old / np.transpose(P).dot(Ap)
-        X = X + (alpha * P)
-        R = R - (alpha * Ap)
-        if (math.sqrt(np.transpose(R).dot(R)) < p):
-            break
-        Z = M.dot(R)
-        rs_new = np.transpose(R).dot(Z)
-        rs_new_beta = np.transpose(Z).dot(R)
-        P = Z + (rs_new_beta/rs_old_beta) * P
-        rs_old = rs_new
-        rs_old_beta = rs_new_beta
-    print("\n R = \n", R)
-    print("\n X = \n", X)
-    return X
-
 ##Affichage_repartition_chaleur
 def display_heat(x):
     x = np.reshape(x, (math.sqrt(len(x)), math.sqrt(len(x))))
@@ -157,26 +86,27 @@ def display_heat(x):
     im = ax.imshow(x, cmap=plt.get_cmap('hot'), interpolation='nearest')
     fig.colorbar(im)
     plt.show()
+
 ##BEGIN
 ##CHOLESKY
 N = 2
 A = matrice_chaleur(N)
-display(A)
+cho.display(A)
 N = 50
 #b = creation_b_nord(N)
 b = creation_b_centre(N)
-#x = resolution_cholesky(N, b)
-#display_heat(x)
+x = resolution_cholesky(N, b)
+display_heat(x)
 
 ##CONJUGE
 A = matrice_chaleur(N)
 ##conjuge gradiant
 imax = 10**3 #iteration number
 p = 10**(-10) #precision
-x = np.zeros((2500,1))
-x = conjgrad(-A, b, x, imax, p)
+x = np.zeros((N**2,1))
+x = conj.conjgrad(-A, b, x, imax, p)
 display_heat(x)
 
 ##conjuge gradiant precond
-x = conjgrad_precond(-A, b, x, imax, p)
+x = conj.conjgrad_precond(-A, b, x, imax, p)
 display_heat(x)
