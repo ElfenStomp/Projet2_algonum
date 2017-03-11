@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from matplotlib.legend_handler import HandlerLine2D
 
 import sdp_matrix as sdp
-import Cholesky as cho
+import cholesky as cho
 
 ##Test incomplete cholesky and cholesky
 def test_cholesky_incomplet():

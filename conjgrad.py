@@ -102,7 +102,6 @@ def conjgrad_precond(A,B,X,imax,p):
         return np.zeros((np.shape(A)[0],1))
     R = B - A.dot(X)
     M = matrix_inv_approx(A)
-    #M = spl.inv(A)
     Z = M.dot(R)
     P = Z
     rs_old = np.transpose(R).dot(Z)
