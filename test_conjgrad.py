@@ -1,24 +1,22 @@
 import numpy as np
-import scipy.linalg as spl  # pour la fonction solve, qui résoud une équation de type AX = B
-import matplotlib.pyplot as plt # pour tracer la courbe de comparaisons entre la méthode du gradient conjugué
-import sdp_matrix as sdp # pour générer des matrices symétriques définies positives à diagonale dominante
-
-import sdp_matrix as sdp
-import conjgrad as conj
+import scipy.linalg as spl  # for the function solve.
+import matplotlib.pyplot as plt # in order to display the datas.
+import sdp_matrix as sdp #generate sdp matrix.
+import conjgrad as conj #function of the conjugate gradient method
 
 
 def tst_conjgrad():
-        # Initialisation des arguments de conjgrad
+        # initialized first test matrix
     M = np.array([[2.,1.,1.],[1.,2.,1.],[1.,1.,2.]])
     A = np.dot(M,np.transpose(M))
     print("A= \n", A, "\n Dimension de A: ", np.shape(A))
     B = np.array([[1.],[2.],[3.]])
     print("B = \n", B, "\n Dimension de B: ", np.shape(B))
-    X = np.array([[0.],[0.],[0.]]) # On initialise X au vecteur nul de R^3
+    X = np.array([[0.],[0.],[0.]]) # initialized null 3-dimensioned vector
     imax = 10**3
     p = 10**(-100)
     print("\n Précision à ",p," près \n")
-        # Comparaison sommaire entre conjgrad et np.linalg.solve
+        # not accurate comparison between conjgrad and np.linalg.solve
     X1 = conj.conjgrad_precond(A, B, X, imax, p)
     X2 = spl.solve(A, B)
     print("\n Avec la méthode du gradient conjugué on a X = \n", X1)
@@ -31,13 +29,12 @@ def tst_conjgrad():
     nbr_extra_diag = int(input("Ainsi que le nombre d'elements extra-diagonaux de A: "))
     curve_nbr = int(input("Veuiller preciser le nombre de courbes à tracer : "))
 
-        # Vitesse de convergence absolue
-    t = np.linspace(-5, 0, 50) # L'axe des abscisses qui représente la précision
+        # absolute convergence speed
+    t = np.linspace(-5, 0, 50) # The x-axis gives the precision.
     B = sdp.random_vector(matrix_size)
 
     for c_index in range(curve_nbr):
         A = sdp.matrice_SDP(matrix_size, nbr_extra_diag)
-        #B = sdp.random_vector(matrix_size)
         Xzero = np.zeros((matrix_size,1))
         X2 = spl.solve(A, B)
 

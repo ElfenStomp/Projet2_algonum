@@ -1,13 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-import scipy.linalg as spl# pour la fonction solve, qui resoud une équation de type AX = B
+import scipy.linalg as spl# to use the function solve
 
 import Cholesky as cho
 import conjgrad as conj
 
-##Pivot de Gauss
-def montee_gauss(T, b):
+##gauss_tool
+def gauss_up(T, b):
     n = len(T[0])
     x = np.zeros(n)
     for i in range(n - 1, -1, -1):
@@ -17,7 +17,7 @@ def montee_gauss(T, b):
         x[i] = y/(T[i, i])
     return x
 
-def descente_gauss(T, b):
+def gauss_down(T, b):
     n = len(T[0])
     x = np.zeros(n)
     for i in range(0, n, 1):
@@ -28,7 +28,7 @@ def descente_gauss(T, b):
     return x
 
 ##Creation_de_la_matrice_de_l_equation_de_la_chaleur
-def matrice_chaleur(N):
+def heat_matrix(N):
     m = N**2
     A = np.zeros([m, m])
     for i in range(0, m, 1):
@@ -42,13 +42,13 @@ def matrice_chaleur(N):
     return A
 
 ##Creation_du_vecteur_b
-def creation_b_nord(N):
+def creation_b_north(N):
     b = np.zeros([N**2, 1])
     for i in range(0, N, 1):
         b[i] = 1
     return b 
     
-def creation_b_centre(N):
+def creation_b_center(N):
     b = np.zeros([N**2, 1])
     center = ((N**2)//2) - 1 + (N//2)
     if N == 1:
@@ -61,23 +61,14 @@ def creation_b_centre(N):
     return b 
 
 ##Resolution_Cholesky
-def resolution_cholesky(N, b):
+def resolution_cholesky(N, A, b):
     h = 1 / (N + 1)
-    A = matrice_chaleur(N)
     L = cho.cholesky(-A)
-    y = descente_gauss(L, b)
-    x = montee_gauss(np.transpose(L), y)
+    y = gauss_down(L, b)
+    x = gauss_up(np.transpose(L), y)
     x = (x * (h**2))   # *(-1) ?
     return x
 
-
-# 3
-def is_symdefpos(M):
-    # vérification de la symétrie de M
-    for i in range(np.shape(M)[0]):
-        for j in range(np.shape(M)[1]):
-            if (M[i][j] != M[j][i]):
-                return False
 
 ##Affichage_repartition_chaleur
 def display_heat(x):
@@ -87,26 +78,31 @@ def display_heat(x):
     fig.colorbar(im)
     plt.show()
 
-##BEGIN
-##CHOLESKY
+##BEGIN    
+##heat_matrix example
 N = 2
-A = matrice_chaleur(N)
+A = heat_matrix(N)
 cho.display(A)
-N = 50
-#b = creation_b_nord(N)
-b = creation_b_centre(N)
-x = resolution_cholesky(N, b)
-display_heat(x)
 
-##CONJUGE
-A = matrice_chaleur(N)
-##conjuge gradiant
+N = 30
+A = heat_matrix(N)
+#b = creation_b_nord(N)
+b = creation_b_center(N)
+
+
+##CHOLESKY
+#x = resolution_cholesky(N, A, b)
+#display_heat(x)
+
+##CONJUGATE
 imax = 10**3 #iteration number
 p = 10**(-10) #precision
+##conjuge gradiant
 x = np.zeros((N**2,1))
 x = conj.conjgrad(-A, b, x, imax, p)
 display_heat(x)
 
 ##conjuge gradiant precond
+x = np.zeros((N**2,1))
 x = conj.conjgrad_precond(-A, b, x, imax, p)
 display_heat(x)

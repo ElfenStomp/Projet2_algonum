@@ -6,7 +6,7 @@ from matplotlib.legend_handler import HandlerLine2D
 import sdp_matrix as sdp
 import Cholesky as cho
 
-##Test_Cholesky_incomplet
+##Test incomplete cholesky and cholesky
 def test_cholesky_incomplet():
     n = 100
     nb_extra_diag = ((n**2) // 2) - n - 1 
@@ -30,6 +30,9 @@ def test_cholesky_incomplet():
     plt.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
     plt.xlabel("Nombre de termes extra-diagonaux")
     plt.ylabel("Temps d'execution (en seconde)")
+    plt.show()
+    
+    
 
 ##PARTIE_1
 #1.Cholesky

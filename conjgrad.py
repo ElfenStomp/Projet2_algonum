@@ -1,14 +1,12 @@
-# Méthode du gradient conjugué
+# conjugate gradient method
 
-    # Bibliothèques nécessaires
+    # library needed
 
 import numpy as np
 import math as m
-import scipy.linalg as spl # pour la fonction solve, qui résoud une équation de type AX = B
-#import matplotlib.pyplot as plt # pour tracer la courbe de comparaisons entre la méthode du gradient conjugué
+import scipy.linalg as spl # in order to solve Ax=b
 
-import sdp_matrix as sdp # pour générer des matrices symétriques définies positives à diagonale dominante
-
+import sdp_matrix as sdp # generate sdp matrix
 # 1
 """
  Syntaxe plus "propre" :
@@ -49,18 +47,18 @@ du gradient conjugué.
 
 # 3
 def is_symdefpos(M):
-    # vérification de la symétrie de M
+    # check if M is symmetric
     for i in range(np.shape(M)[0]):
         for j in range(np.shape(M)[1]):
             if (M[i][j] != M[j][i]):
                 return False
 
-    # vérification de la positivité des valeurs propres
+    # check if M is defined positive
     for l in spl.eig(M)[0]:
         if (type(l) == complex or l < 0) and abs(l) > 10**(-10):
             return False
 
-    # vérification de l'inversibilité de A
+    # check if M is invertible
     if spl.det(M) == 0:
         return False
 
@@ -68,7 +66,7 @@ def is_symdefpos(M):
 
 def conjgrad(A,B,X,imax,p):
     if (is_symdefpos(A) == False):
-        # On vérifie que A soit bien symétrique définie positive.
+        # check if A is sdp
         print("\n A n'est pas symétrique définie positive")
         return np.zeros((np.shape(A)[0],1))
     R = B - A.dot(X)
@@ -90,7 +88,7 @@ def conjgrad(A,B,X,imax,p):
 
 def conjgrad_precond(A,B,X,imax,p):
     if (is_symdefpos(A) == False):
-        # On vérifie que A soit bien symétrique définie positive.
+        # check if A is sdp
         print("\n A n'est pas symétrique définie positive")
         return np.zeros((np.shape(A)[0],1))
     R = B - A.dot(X)
