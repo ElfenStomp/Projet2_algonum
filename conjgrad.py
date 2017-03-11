@@ -88,14 +88,23 @@ def conjgrad(A,B,X,imax,p):
     print("\n X = \n", X)
     return X
 
+def matrix_inv_approx(A):
+    if (spl.det(A) == 0):
+        print("\n Cette matrice ne peut être inversée")
+        return
+    M = sdp.matrice_SDP(np.shape(A)[0],int(np.shape(A)[0]/2))
+    while (np.linalg.cond(M.dot(A)) > np.linalg.cond(A)):
+        M = sdp.matrice_SDP(np.shape(A)[0],int(np.shape(A)[0]/2))
+    return M
+
 def conjgrad_precond(A,B,X,imax,p):
     if (is_symdefpos(A) == False):
         # On vérifie que A soit bien symétrique définie positive.
         print("\n A n'est pas symétrique définie positive")
         return np.zeros((np.shape(A)[0],1))
     R = B - A.dot(X)
-    #M = matrix_inv_approx(A)
-    M = spl.inv(A)
+    M = matrix_inv_approx(A)
+    #M = spl.inv(A)
     Z = M.dot(R)
     P = Z
     rs_old = np.transpose(R).dot(Z)
